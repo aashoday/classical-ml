@@ -34,7 +34,8 @@ class LinearRegression:
             self.bias -= self.lr * db
 
             # Print metrics
-            if epoch % 50 == 0:
+            log_interval = max(1, self.epochs // 10)
+            if epoch % log_interval == 0 or epoch == self.epochs -1:
                 print(f"Epoch: {epoch}")
                 print(f"MAE Loss: {self.maeLoss(y=y, preds=y_predicted)}")
 
