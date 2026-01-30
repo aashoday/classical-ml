@@ -37,5 +37,10 @@ class LinearRegression:
     def predict(self, X):
         X = (X - self.X_mean) / self.X_std
         return np.dot(X, self.weights) + self.bias
+    
+    # Calculate loss
+    def maeLoss(self, y_pred, y):
+        return np.mean(np.abs(self.y - self.y_pred))
+        
 
 
