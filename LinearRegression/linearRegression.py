@@ -24,7 +24,7 @@ class LinearRegression:
         self.bias = 0
 
         # Training loop
-        for _ in range(self.epochs):
+        for epoch in range(self.epochs):
             y_predicted = np.dot(X, self.weights) + self.bias
 
             dw = (1/n_samples) * np.dot(X.T, (y_predicted - y))
@@ -33,6 +33,11 @@ class LinearRegression:
             self.weights -= self.lr * dw
             self.bias -= self.lr * db
 
+            # Print metrics
+            if epoch % 50 == 0:
+                print(f"Epoch: {epoch}")
+                print(f"MAE Loss: {self.maeLoss(y=y, preds=y_predicted)}")
+
     # Make prediction on test cases
     def predict(self, X):
         X = (X - self.X_mean) / self.X_std
@@ -40,7 +45,7 @@ class LinearRegression:
     
     # Calculate loss
     def maeLoss(self, preds, y):
-        return np.mean(np.abs(self.y - self.pred))
+        return np.mean(np.abs(preds - y))
         
 
 
