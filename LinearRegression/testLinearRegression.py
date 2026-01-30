@@ -7,4 +7,4 @@ regressor.fit(X=X_train, y=y_train)
 preds = regressor.predict(X_test)
 
 loss_vals = regressor.maeLoss(preds=preds, y=y_test)
-print(loss_vals)
+print(f"\nTesting loss : {loss_vals}")
