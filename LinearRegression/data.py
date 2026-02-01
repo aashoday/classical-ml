@@ -14,7 +14,7 @@ X_test, y_test = X.iloc[SPLIT_POINT:], y.iloc[SPLIT_POINT:]
 
 # Print length and shape of splits 
 print(f"Length of X_train: {len(X_train)} | Shape of X_train: {X_train.shape}")
-print(f"Length of X_test: {len(X_test)} | Shape of X_test: {X_test.shape}")
+print(f"Length of X_test: {len(X_test)}   | Shape of X_test: {X_test.shape}")
 print(f"Length of y_train: {len(y_train)} | Shape of y_train: {y_train.shape}")
-print(f"Length of y_test: {len(y_test)} | Shape of y_test: {y_test.shape}")
+print(f"Length of y_test: {len(y_test)}   | Shape of y_test: {y_test.shape}")
 

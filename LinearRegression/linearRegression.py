@@ -47,6 +47,3 @@ class LinearRegression:
     # Calculate loss
     def maeLoss(self, preds, y):
         return np.mean(np.abs(preds - y))
-        
-
-
