@@ -31,8 +31,9 @@ class LogisticRegression:
 
     @staticmethod
     def _sigmoid(z: np.ndarray) -> np.ndarray:
+        z = np.clip(z, -500, 500)
         return 1 / (1 + np.exp(-z))
     
     @staticmethod
     def accuracy(preds: np.ndarray , y: np.ndarray) -> float:
-        return np.sum(preds == y) / len(y)
+        print(f"Accuracy : {np.sum(preds == y) / len(y)}")
