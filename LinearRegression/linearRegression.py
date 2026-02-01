@@ -5,14 +5,14 @@ import numpy as np
 class LinearRegression:
     
     # Initialize parameters
-    def __init__(self, lr=0.001, epochs=1000):
+    def __init__(self, lr: float = 0.001, epochs: int = 1000) -> None:
         self.lr = lr
         self.epochs = epochs
         self.weights = None
         self.bias = None
 
     # Fit model to data
-    def fit(self, X, y):
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         n_samples , n_features = X.shape
 
         # Scale features
@@ -37,13 +37,14 @@ class LinearRegression:
             log_interval = max(1, self.epochs // 10)
             if epoch % log_interval == 0 or epoch == self.epochs -1:
                 print(f"Epoch: {epoch}")
-                print(f"MAE Loss: {self.maeLoss(y=y, preds=y_predicted)}")
+                print(f"MAE Loss: {self.maeLoss(y_predicted, y)}")
 
     # Make prediction on test cases
-    def predict(self, X):
+    def predict(self, X: np.ndarray) -> np.ndarray:
         X = (X - self.X_mean) / self.X_std
         return np.dot(X, self.weights) + self.bias
     
     # Calculate loss
-    def maeLoss(self, preds, y):
+    @staticmethod
+    def maeLoss(preds: np.ndarray, y: np.ndarray) -> float:
         return np.mean(np.abs(preds - y))
