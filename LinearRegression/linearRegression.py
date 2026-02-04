@@ -4,20 +4,33 @@ import numpy as np
 # Create linearRegression model class
 class LinearRegression:
     """
-    Linear Regression model trained using Gradient Descent.
+    Linear Regression model trained using batch Gradient Descent.
 
-    This implementation supports feature standardization, mean absolute error (mae) monitoring, and vectorised gradient updates.
+    Features:
+    - Z-socre feature standardization
+    - vectorized gradient updates
+    - Mean Absolute Error (MAE) monitoring
+    - Defensive input validation
+
+    Notes
+    -----
+    - Optimizes Mean Squared Error(MSE) internally.
+    - MAE is used only for logging/monitoraing.
+    - All input data must be numeric and finite.
     """
 
     # Initialize parameters
     def __init__(self, lr: float = 0.001, epochs: int = 1000) -> None:
         """
-        Initialize the Linear Regression model.
+        Initialize the model.
 
         Parameters
         ----------
-        lr : float, default=0.001 --Learning rate for gradient descent.
-        epochs : int, default=1000 --Number of training iterations.
+        lr : float, optional
+            Learning rate for gradient descent (default-0.001).
+
+        epochs : int, optional 
+            Number of training iterations (default=1000). 
         """
         self.lr = lr
         self.epochs = epochs
@@ -29,14 +42,25 @@ class LinearRegression:
     # Fit model to data
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
-        Fit the linear regression model to training data.
-        This method standardizes features, initializes parameters, and performs gradient descent.
+        Train the model on input data.
 
+        This method standardizes features, initializes parameters and performs batch gradient descent.
+        
         Parameters
         ----------
-        X : np.ndarray of shape (n_samples, n_features) --Training input samples. 
-        y : np.ndarray of shape (n_samples,) --Target Values.
-        
+        X : np.ndarray, shape (n_samples, n_features)
+            Training features.
+
+        y = np.ndarray, shape (n_samples,)
+            Target values.
+
+        Raises
+        -----
+        ValueError
+            If input shapes are invalid, contain NaNs, or contain zero-variance features.
+
+        RuntimeError
+            If training fails due to numerical issues.        
         """
         n_samples , n_features = X.shape
 
@@ -71,11 +95,21 @@ class LinearRegression:
 
         Parameters
         ----------
-        X : np.ndarray of shape (n_samples, n_features) --Input samples.
+        X : np.ndarray, shape (n_samples, n_features) 
+            Input samples.
         
         Returns 
         -------
-        np.ndarray of shape (n_samples,) --Predicted target values.
+        np.ndarray, shape (n_samples,) 
+            Predicted values.
+
+        Raises
+        ------
+        RuntimeError
+            If model is not fitted.
+
+        ValueError
+            If input shape is invalid.
         
         """
         X = (X - self.X_mean) / self.X_std
@@ -85,15 +119,18 @@ class LinearRegression:
     @staticmethod
     def maeLoss(preds: np.ndarray, y: np.ndarray) -> float:
         """
-        Compute Mean Absolute Error (MAE)
+        Compute Mean Absolute Error (MAE).
 
         Parameters
         ----------
-        preds : np.ndarray of shape (n_samples,) --Predicted target values.
-        y : np.ndarray of shape (n_samples,) --True target values.
+        preds : np.ndarray
+            Predicted values.
+
+        y : np.ndarray 
+            True values.
 
         Returns
         -------
-        float --Mean Absolute Error.
+        float, Mean Absolute Error.
         """
         return np.mean(np.abs(preds - y))
