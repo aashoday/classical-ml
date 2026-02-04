@@ -32,6 +32,12 @@ class LinearRegression:
         epochs : int, optional 
             Number of training iterations (default=1000). 
         """
+        if lr <= 0:
+            raise ValueError("Learning rate must be positive.")
+        
+        if epochs <= 0:
+            raise ValueError("Epochs must be positive")
+        
         self.lr = lr
         self.epochs = epochs
         self.weights = None
@@ -62,31 +68,54 @@ class LinearRegression:
         RuntimeError
             If training fails due to numerical issues.        
         """
-        n_samples , n_features = X.shape
 
-        # Scale features
-        self.X_mean = np.mean(X, axis=0)
-        self.X_std = np.std(X, axis=0)
-        X = (X - self.X_mean) / self.X_std
-        
-        self.weights = np.zeros(n_features)
-        self.bias = 0
+        try:
+            X = np.asarray(X, dtype=float)
+            y = np.asarray(y, dtype=float)
 
-        # Training loop
-        for epoch in range(self.epochs):
-            y_predicted = np.dot(X, self.weights) + self.bias
+            if X.ndim != 2:
+                raise ValueError("X must be 2D (n_samples, n_features)")
 
-            dw = (1/n_samples) * np.dot(X.T, (y_predicted - y))
-            db = (1/n_samples) * np.sum(y_predicted - y)
+            if y.ndim != 1:
+                raise ValueError("y must be 1D")
 
-            self.weights -= self.lr * dw
-            self.bias -= self.lr * db
+            if X.shape[0] != y.shape[0]:
+                raise ValueError("X and y must contain same number of samples")
 
-            # Print metrics
-            log_interval = max(1, self.epochs // 10)
-            if epoch % log_interval == 0 or epoch == self.epochs -1:
-                print(f"Epoch: {epoch}")
-                print(f"MAE Loss: {self.maeLoss(y_predicted, y)}")
+            if np.isnana(X).any() or np.isnan(y).any():
+                raise ValueError("NaN values detected")    
+            n_samples , n_features = X.shape
+
+            # Scale features
+            self.X_mean = np.mean(X, axis=0)
+            self.X_std = np.std(X, axis=0)
+
+            if np.any(self.X_std == 0):
+                raise ValueError("Zero-variance feature detected")
+            
+            X = (X - self.X_mean) / self.X_std
+
+            self.weights = np.zeros(n_features)
+            self.bias = 0
+
+            # Training loop
+            for epoch in range(self.epochs):
+                y_predicted = np.dot(X, self.weights) + self.bias
+
+                dw = (1/n_samples) * np.dot(X.T, (y_predicted - y))
+                db = (1/n_samples) * np.sum(y_predicted - y)
+
+                self.weights -= self.lr * dw
+                self.bias -= self.lr * db
+
+                # Print metrics
+                log_interval = max(1, self.epochs // 10)
+                if epoch % log_interval == 0 or epoch == self.epochs -1:
+                    print(f"Epoch: {epoch}")
+                    print(f"MAE Loss: {self.maeLoss(y_predicted, y)}")
+
+        except Exception as e:
+            raise RuntimeError(f"Training failed: {e}")
 
     # Make prediction on test cases
     def predict(self, X: np.ndarray) -> np.ndarray:
@@ -112,6 +141,15 @@ class LinearRegression:
             If input shape is invalid.
         
         """
+
+        if self.weights is None:
+            raise RuntimeError("Model must be fitted before prediction")
+        
+        X = np.asarray(X, dtype=float)
+
+        if X.ndim != 2:
+            raise ValueError("X must be 2D")
+        
         X = (X - self.X_mean) / self.X_std
         return np.dot(X, self.weights) + self.bias
     
