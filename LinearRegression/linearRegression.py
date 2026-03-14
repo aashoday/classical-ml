@@ -82,7 +82,7 @@ class LinearRegression:
             if X.shape[0] != y.shape[0]:
                 raise ValueError("X and y must contain same number of samples")
 
-            if np.isnana(X).any() or np.isnan(y).any():
+            if np.isnan(X).any() or np.isnan(y).any():
                 raise ValueError("NaN values detected")    
             n_samples , n_features = X.shape
 
@@ -171,4 +171,4 @@ class LinearRegression:
         -------
         float, Mean Absolute Error.
         """
-        return np.mean(np.abs(preds - y))
+        return float(np.mean(np.abs(preds - y)))
