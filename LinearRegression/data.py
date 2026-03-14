@@ -6,8 +6,7 @@ from sklearn.preprocessing import StandardScaler
 
 # Fetch data
 dataset = fetch_california_housing(as_frame=True)
-X = dataset.data
-y = dataset.target
+X, y = dataset.data, dataset.target
 
 # Scale data 
 scaler = StandardScaler()
